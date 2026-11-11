@@ -1,0 +1,37 @@
+{
+  "mcpServers": {
+    "informatica-idmc-project-scoped": {
+      "command": "python",
+      "args": [
+        "c:/obData/investigating-informatica-idmc-mcp/src/idmc_mcp_server.py"
+      ],
+      "env": {
+        "IDMC_PROJECT_NAME": "Finance_Customer360",
+        "IDMC_REGION": "dm-us",
+        "IDMC_POD": "usw5",
+        "IDMC_MOCK_MODE": "true",
+        "IDMC_LOGIN_URL": "https://dm-us.informaticacloud.com",
+        "IDMC_POD_BASE_URL": "https://usw5.dm-us.informaticacloud.com",
+        "IDMC_PROFILING_BASE_URL": "https://usw5-dqprofile.dm-us.informaticacloud.com",
+        "IDMC_CDGC_BASE_URL": "https://idmc-api.dm-us.informaticacloud.com",
+        "IDMC_USERNAME": "svc_finance_mcp@company.com",
+        "IDMC_PASSWORD": "REPLACE_WITH_IDMC_PASSWORD",
+        "IDMC_ORG_ID": "011ABC00000000000001"
+      }
+    },
+    "informatica-native-shared-job-mgmt": {
+      "url": "https://usw5.dm-us.informaticacloud.com/ai-agent-engineering/mcp/v1/job-management/sse",
+      "headers": {
+        "Authorization": "Bearer REPLACE_WITH_INFA_JWT_OR_OAUTH_TOKEN",
+        "X-INFA-ORG-ID": "011ABC00000000000001"
+      }
+    },
+    "informatica-native-shared-catalog-discovery": {
+      "url": "https://idmc-api.dm-us.informaticacloud.com/ai-agent-engineering/mcp/v1/catalog-discovery/sse",
+      "headers": {
+        "Authorization": "Bearer REPLACE_WITH_INFA_JWT_OR_OAUTH_TOKEN",
+        "X-INFA-ORG-ID": "011ABC00000000000001"
+      }
+    }
+  }
+}

@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Informatica IDMC (dm-us) — Project-Scoped MCP Server Interactive Portal</title>
+  <style>
+    :root {
+      --bg-primary: #0b0f19;
+      --bg-secondary: #111827;
+      --bg-card: #161f33;
+      --bg-card-hover: #1e2942;
+      --bg-code: #090d16;
+      --text-primary: #f3f4f6;
+      --text-secondary: #9ca3af;
+      --text-muted: #6b7280;
+      --accent-orange: #ff6b2b;
+      --accent-blue: #38bdf8;
+      --accent-indigo: #6366f1;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --accent-purple: #a855f7;
+      --border-color: #26334d;
+      --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+      --sidebar-width: 290px;
+    }
+
+    [data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f1f5f9;
+      --bg-code: #0f172a;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      --accent-orange: #ea580c;
+      --accent-blue: #0284c7;
+      --accent-indigo: #4f46e5;
+      --accent-emerald: #059669;
+      --accent-amber: #d97706;
+      --accent-rose: #e11d48;
+      --accent-purple: #7e22ce;
+      --border-color: #e2e8f0;
+      --shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar Navigation */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--border-color);
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+      overflow-y: auto;
+    }
+
+    .brand {
+      padding: 22px 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255, 107, 43, 0.15);
+      color: var(--accent-orange);
+      margin-bottom: 8px;
+    }
+
+    .brand h1 {
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+    }
+
+    .brand p {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    .search-box {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 9px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-size: 13px;
+      outline: none;
+    }
+
+    .search-box input:focus {
+      border-color: var(--accent-blue);
+    }
+
+    .nav-list {
+      list-style: none;
+      padding: 12px 10px;
+      flex: 1;
+    }
+
+    .nav-section-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      padding: 10px 12px 6px;
+    }
+
+    .nav-item a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: 8px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 13.5px;
+      font-weight: 500;
+      transition: all 0.18s ease;
+      margin-bottom: 2px;
+    }
+
+    .nav-item a:hover,
+    .nav-item a.active {
+      background: var(--bg-card-hover);
+      color: var(--text-primary);
+    }
+
+    .nav-item a.active {
+      border-left: 3px solid var(--accent-orange);
+      font-weight: 600;
+    }
+
+    .sidebar-footer {
+      padding: 16px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .theme-btn {
+      width: 100%;
+      padding: 9px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+
+    .theme-btn:hover {
+      background: var(--bg-card-hover);
+    }
+
+    /* Main Content */
+    .main {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      padding: 36px 48px 80px;
+      max-width: 1380px;
+    }
+
+    /* Hero Banner */
+    .hero {
+      background: linear-gradient(135deg, rgba(255, 107, 43, 0.14), rgba(56, 189, 248, 0.1), rgba(99, 102, 241, 0.12));
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 32px 36px;
+      margin-bottom: 36px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-top {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .pill {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pill.orange { border-color: rgba(255, 107, 43, 0.5); color: var(--accent-orange); }
+    .pill.blue { border-color: rgba(56, 189, 248, 0.5); color: var(--accent-blue); }
+    .pill.green { border-color: rgba(16, 185, 129, 0.5); color: var(--accent-emerald); }
+    .pill.purple { border-color: rgba(168, 85, 247, 0.5); color: var(--accent-purple); }
+
+    .hero h2 {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      color: var(--text-secondary);
+      font-size: 15.5px;
+      max-width: 920px;
+    }
+
+    .kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px 18px;
+    }
+
+    .kpi-card .label {
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .kpi-card .value {
+      font-size: 22px;
+      font-weight: 800;
+      margin-top: 4px;
+      color: var(--text-primary);
+    }
+
+    .kpi-card .sub {
+      font-size: 12px;
+      color: var(--accent-emerald);
+      margin-top: 2px;
+    }
+
+    /* Sections */
+    .section {
+      margin-bottom: 48px;
+      scroll-margin-top: 24px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .section-header h3 {
+      font-size: 21px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+      gap: 20px;
+    }
+
+    /* Interactive Simulator */
+    .sim-container {
+      display: grid;
+      grid-template-columns: 330px 1fr;
+      gap: 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .sim-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .sim-btn {
+      text-align: left;
+      padding: 14px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .sim-btn:hover {
+      border-color: var(--accent-blue);
+      transform: translateX(3px);
+    }
+
+    .sim-btn.active {
+      border-color: var(--accent-orange);
+      background: rgba(255, 107, 43, 0.12);
+    }
+
+    .sim-btn .sim-title {
+      font-weight: 700;
+      font-size: 13.5px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .sim-btn .sim-desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .sim-display {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .chain-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .chain-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: var(--bg-secondary);
+      border-left: 4px solid var(--accent-blue);
+      font-size: 13px;
+    }
+
+    .chain-step.security { border-left-color: var(--accent-emerald); }
+    .chain-step.error { border-left-color: var(--accent-rose); }
+    .chain-step.claire { border-left-color: var(--accent-purple); }
+
+    .step-num {
+      min-width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(56, 189, 248, 0.18);
+      color: var(--accent-blue);
+      font-weight: 700;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+    }
+
+    pre {
+      background: var(--bg-code);
+      color: #e2e8f0;
+      padding: 16px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      font-family: "JetBrains Mono", Consolas, monospace;
+      font-size: 12.5px;
+      overflow-x: auto;
+      line-height: 1.55;
+    }
+
+    code {
+      font-family: "JetBrains Mono", Consolas, monospace;
+      font-size: 12.5px;
+      background: rgba(99, 102, 241, 0.14);
+      color: var(--accent-blue);
+      padding: 2px 6px;
+      border-radius: 5px;
+    }
+
+    pre code {
+      background: transparent;
+      padding: 0;
+      color: inherit;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border-color);
+      vertical-align: top;
+    }
+
+    th {
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-secondary);
+      background: var(--bg-secondary);
+    }
+
+    tr:hover td {
+      background: var(--bg-card-hover);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .badge-success { background: rgba(16, 185, 129, 0.18); color: var(--accent-emerald); }
+    .badge-danger { background: rgba(244, 63, 94, 0.18); color: var(--accent-rose); }
+    .badge-warn { background: rgba(245, 158, 11, 0.18); color: var(--accent-amber); }
+    .badge-info { background: rgba(56, 189, 248, 0.18); color: var(--accent-blue); }
+    .badge-purple { background: rgba(168, 85, 247, 0.18); color: var(--accent-purple); }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 9px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: var(--accent-orange);
+      color: #fff;
+      border-color: var(--accent-orange);
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    .copy-btn {
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .copy-btn:hover {
+      border-color: var(--accent-blue);
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar { position: static; width: 100%; height: auto; }
+      body { flex-direction: column; }
+      .main { margin-left: 0; padding: 24px; }
+      .sim-container { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Persistent Left Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-badge">🌎 Region: dm-us</div>
+      <h1>Informatica IDMC MCP Architecture</h1>
+      <p>Project-Scoped Governance, Taskflows, Profiling &amp; CLAIRE AI</p>
+    </div>
+
+    <div class="search-box">
+      <input type="text" id="globalSearch" placeholder="🔍 Filter sections, APIs, tools..." oninput="filterContent(this.value)" />
+    </div>
+
+    <ul class="nav-list">
+      <li class="nav-section-label">Core Architecture</li>
+      <li class="nav-item"><a href="#overview" class="active">🏛️ Executive Overview &amp; dm-us</a></li>
+      <li class="nav-item"><a href="#simulator">⚡ Live MCP API Chain Simulator</a></li>
+      <li class="nav-item"><a href="#architecture-svg">🗺️ Visual API &amp; Security Topology</a></li>
+
+      <li class="nav-section-label">5 Business Issues Solved</li>
+      <li class="nav-item"><a href="#issue-1">1️⃣ Monitor Taskflows &amp; Errors</a></li>
+      <li class="nav-item"><a href="#issue-2">2️⃣ Execute Taskflows by Name</a></li>
+      <li class="nav-item"><a href="#issue-3">3️⃣ Project Profiling &amp; DQ Rules</a></li>
+      <li class="nav-item"><a href="#issue-4">4️⃣ CLAIRE AI Insights APIs</a></li>
+      <li class="nav-item"><a href="#issue-5">5️⃣ Tutorial: Connect MCP</a></li>
+
+      <li class="nav-section-label">Project Governance</li>
+      <li class="nav-item"><a href="#status-tracker">✅ Status &amp; 7/7 Test Suite</a></li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <button class="theme-btn" onclick="toggleTheme()">
+        <span id="themeIcon">☀️</span> <span id="themeText">Switch to Light Mode</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="main">
+
+    <!-- Hero Banner -->
+    <section class="hero" id="overview">
+      <div class="hero-top">
+        <span class="pill orange">🔒 Hardcoded Tenant Scope: IDMC_PROJECT_NAME="Finance_Customer360"</span>
+        <span class="pill blue">🌎 Pod Region: dm-us (Auto-Discovery)</span>
+        <span class="pill green">✅ 7 / 7 Automated Tests Passing</span>
+        <span class="pill purple">🧠 CLAIRE + CDGC + CDP + ActiveVOS</span>
+      </div>
+      <h2>Informatica IDMC Project-Scoped MCP Server Proposal &amp; Reference Implementation</h2>
+      <p>
+        A complete architectural blueprint and working Python <code>FastMCP</code> server located in
+        <code>c:/obData/investigating-informatica-idmc-mcp/</code>. It bridges <strong>Informatica Platform REST v3</strong>,
+        <strong>ActiveVOS Taskflows</strong>, <strong>Cloud Data Profiling (CDP)</strong>, <strong>CDGC Rule Occurrences</strong>,
+        and <strong>CLAIRE Metadata AI</strong> behind 5 simple, project-isolated MCP tools—so business users can monitor, run, and audit their single assigned project via natural language without knowing internal API chains or FRS IDs.
+      </p>
+
+      <div class="kpi-strip">
+        <div class="kpi-card">
+          <div class="label">Assigned Project Scope</div>
+          <div class="value">1 Hardcoded</div>
+          <div class="sub">Enforced via .mcp.json env</div>
+        </div>
+        <div class="kpi-card">
+          <div class="label">MCP Tools Exposed</div>
+          <div class="value">5 Tools + 1 URI</div>
+          <div class="sub">Zero internal IDs needed</div>
+        </div>
+        <div class="kpi-card">
+          <div class="label">IDMC APIs Chained</div>
+          <div class="value">4 Microservices</div>
+          <div class="sub">REST v3, ActiveVOS, CDP, CDGC</div>
+        </div>
+        <div class="kpi-card">
+          <div class="label">Target Cloud Region</div>
+          <div class="value">dm-us</div>
+          <div class="sub">Auto-derives &lt;pod&gt; &amp; -dqprofile</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Simulator -->
+    <section class="section searchable" id="simulator">
+      <div class="section-header">
+        <h3>⚡ Interactive MCP Tool &amp; Behind-the-Scenes API Chain Simulator</h3>
+        <span class="badge badge-info">Click any scenario on the left to inspect the hidden API chain</span>
+      </div>
+
+      <div class="sim-container">
+        <div class="sim-buttons">
+          <button class="sim-btn active" onclick="selectScenario(0, this)">
+            <div class="sim-title">
+              <span>1. get_taskflow_runs</span>
+              <span class="badge badge-danger">Issue #1</span>
+            </div>
+            <div class="sim-desc">Monitor project taskflows &amp; drill into FAILED subtask logs</div>
+          </button>
+
+          <button class="sim-btn" onclick="selectScenario(1, this)">
+            <div class="sim-title">
+              <span>2. list_project_taskflows</span>
+              <span class="badge badge-info">Issue #2A</span>
+            </div>
+            <div class="sim-desc">Discover all taskflows inside hardcoded Finance_Customer360</div>
+          </button>
+
+          <button class="sim-btn" onclick="selectScenario(2, this)">
+            <div class="sim-title">
+              <span>3. execute_project_taskflow</span>
+              <span class="badge badge-success">Issue #2B</span>
+            </div>
+            <div class="sim-desc">Trigger a taskflow by human name without knowing FRS IDs</div>
+          </button>
+
+          <button class="sim-btn" onclick="selectScenario(3, this)">
+            <div class="sim-title">
+              <span>4. get_project_profiling_and_dq_scores</span>
+              <span class="badge badge-warn">Issue #3</span>
+            </div>
+            <div class="sim-desc">Chain CDP Profiling + CDGC Rule Occurrences for the project</div>
+          </button>
+
+          <button class="sim-btn" onclick="selectScenario(4, this)">
+            <div class="sim-title">
+              <span>5. get_claire_project_insights</span>
+              <span class="badge badge-purple">Issue #4</span>
+            </div>
+            <div class="sim-desc">CLAIRE PII Classifications, Rule Suggestions &amp; Root Cause</div>
+          </button>
+
+          <button class="sim-btn" onclick="selectScenario(5, this)">
+            <div class="sim-title">
+              <span>6. Cross-Project Security Gate</span>
+              <span class="badge badge-danger">Blocked</span>
+            </div>
+            <div class="sim-desc">Attempt to run tf_HR_Payroll_Confidential from another project</div>
+          </button>
+        </div>
+
+        <div class="sim-display">
+          <div>
+            <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--accent-orange); margin-bottom: 4px;">
+              👤 User Natural-Language Prompt &amp; MCP Tool Invocation
+            </div>
+            <pre id="simPrompt"></pre>
+          </div>
+
+          <div>
+            <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--accent-blue); margin-bottom: 8px;">
+              🔗 Hidden Informatica IDMC (dm-us) API Chain Executed Behind the Scenes
+            </div>
+            <div class="chain-steps" id="simChain"></div>
+          </div>
+
+          <div>
+            <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--accent-emerald); margin-bottom: 4px;">
+              📦 Structured MCP Response Returned to AI Assistant
+            </div>
+            <pre id="simOutput"></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Visual Architecture SVG -->
+    <section class="section searchable" id="architecture-svg">
+      <div class="section-header">
+        <h3>🗺️ Visual Architecture: Hardcoded Project Scope &amp; dm-us API Routing</h3>
+        <span class="badge badge-purple">4 IDMC Microservice Gateways Unified</span>
+      </div>
+
+      <div class="card" style="overflow-x: auto;">
+        <svg viewBox="0 0 1120 430" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="mcpGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff6b2b" stop-opacity="0.25" />
+              <stop offset="100%" stop-color="#6366f1" stop-opacity="0.25" />
+            </linearGradient>
+            <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#38bdf8" />
+            </marker>
+          </defs>
+
+          <!-- User Box -->
+          <rect x="20" y="145" width="195" height="140" rx="14" fill="#111827" stroke="#38bdf8" stroke-width="2" />
+          <text x="117" y="182" fill="#f3f4f6" font-size="14" font-weight="bold" text-anchor="middle">👤 End User / AI Client</text>
+          <text x="117" y="205" fill="#9ca3af" font-size="11.5" text-anchor="middle">Claude / Cursor / Antigravity</text>
+          <text x="117" y="232" fill="#38bdf8" font-size="11" text-anchor="middle">"Run Customer360 taskflow"</text>
+          <text x="117" y="252" fill="#38bdf8" font-size="11" text-anchor="middle">"Show DQ scores &amp; errors"</text>
+
+          <!-- Arrow User -> MCP -->
+          <line x1="215" y1="215" x2="275" y2="215" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#arrow)" />
+          <text x="245" y="205" fill="#9ca3af" font-size="10" text-anchor="middle">MCP stdio</text>
+
+          <!-- MCP Server Box -->
+          <rect x="280" y="55" width="310" height="320" rx="16" fill="url(#mcpGrad)" stroke="#ff6b2b" stroke-width="2.5" />
+          <text x="435" y="88" fill="#ff6b2b" font-size="13" font-weight="bold" text-anchor="middle">🛡️ PROJECT-SCOPED PYTHON MCP SERVER</text>
+          <rect x="302" y="102" width="266" height="34" rx="8" fill="#090d16" stroke="#10b981" stroke-width="1.5" />
+          <text x="435" y="124" fill="#10b981" font-size="11.5" font-family="monospace" font-weight="bold" text-anchor="middle">ENV: IDMC_PROJECT_NAME="Finance_Customer360"</text>
+
+          <text x="310" y="162" fill="#f3f4f6" font-size="12" font-weight="bold">5 Exposed Project Tools:</text>
+          <text x="315" y="185" fill="#e2e8f0" font-size="11.5" font-family="monospace">• get_taskflow_runs()</text>
+          <text x="315" y="207" fill="#e2e8f0" font-size="11.5" font-family="monospace">• list_project_taskflows()</text>
+          <text x="315" y="229" fill="#e2e8f0" font-size="11.5" font-family="monospace">• execute_project_taskflow()</text>
+          <text x="315" y="251" fill="#e2e8f0" font-size="11.5" font-family="monospace">• get_project_profiling_and_dq_scores()</text>
+          <text x="315" y="273" fill="#e2e8f0" font-size="11.5" font-family="monospace">• get_claire_project_insights()</text>
+
+          <rect x="302" y="295" width="266" height="60" rx="8" fill="#111827" stroke="#6366f1" stroke-width="1" />
+          <text x="435" y="317" fill="#a855f7" font-size="11.5" font-weight="bold" text-anchor="middle">🔑 Unified dm-us Auth &amp; Pod Resolver</text>
+          <text x="435" y="337" fill="#9ca3af" font-size="10.5" text-anchor="middle">Caches INFA-SESSION-ID, IDS-SESSION-ID &amp; JWT</text>
+
+          <!-- Arrows MCP -> 4 Informatica Gateways -->
+          <line x1="590" y1="100" x2="670" y2="65" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" />
+          <line x1="590" y1="180" x2="670" y2="165" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" />
+          <line x1="590" y1="250" x2="670" y2="265" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" />
+          <line x1="590" y1="320" x2="670" y2="365" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" />
+
+          <!-- Gateway 1 -->
+          <rect x="675" y="22" width="420" height="82" rx="10" fill="#111827" stroke="#38bdf8" stroke-width="1.5" />
+          <text x="692" y="46" fill="#38bdf8" font-size="12.5" font-weight="bold">1. Platform REST API v3 (Login &amp; Object Discovery)</text>
+          <text x="692" y="66" fill="#e2e8f0" font-size="11" font-family="monospace">POST https://dm-us.informaticacloud.com/saas/public/core/v3/login</text>
+          <text x="692" y="84" fill="#9ca3af" font-size="11" font-family="monospace">GET  https://&lt;pod&gt;.dm-us.informaticacloud.com/saas/public/core/v3/objects</text>
+
+          <!-- Gateway 2 -->
+          <rect x="675" y="120" width="420" height="82" rx="10" fill="#111827" stroke="#10b981" stroke-width="1.5" />
+          <text x="692" y="144" fill="#10b981" font-size="12.5" font-weight="bold">2. ActiveVOS / CAI Taskflow Execution &amp; Status API</text>
+          <text x="692" y="164" fill="#e2e8f0" font-size="11" font-family="monospace">POST https://&lt;pod&gt;.dm-us.informaticacloud.com/active-bpel/rt/{service}</text>
+          <text x="692" y="182" fill="#9ca3af" font-size="11" font-family="monospace">GET  https://&lt;pod&gt;.dm-us.informaticacloud.com/active-bpel/services/tf/status</text>
+
+          <!-- Gateway 3 -->
+          <rect x="675" y="218" width="420" height="82" rx="10" fill="#111827" stroke="#f59e0b" stroke-width="1.5" />
+          <text x="692" y="242" fill="#f59e0b" font-size="12.5" font-weight="bold">3. Cloud Data Profiling (CDP) Microservice</text>
+          <text x="692" y="262" fill="#e2e8f0" font-size="11" font-family="monospace">GET  https://&lt;pod&gt;-dqprofile.dm-us.informaticacloud.com/.../v1/profile</text>
+          <text x="692" y="280" fill="#9ca3af" font-size="11" font-family="monospace">GET  .../v1/ruleOccurrence/getAllRuleOccurrencesForProfile_V2_Token/{id}</text>
+
+          <!-- Gateway 4 -->
+          <rect x="675" y="316" width="420" height="90" rx="10" fill="#111827" stroke="#a855f7" stroke-width="1.5" />
+          <text x="692" y="340" fill="#a855f7" font-size="12.5" font-weight="bold">4. CDGC Catalog Search &amp; CLAIRE Metadata Intelligence</text>
+          <text x="692" y="360" fill="#e2e8f0" font-size="11" font-family="monospace">POST https://idmc-api.dm-us.informaticacloud.com/data360/search/v1/assets</text>
+          <text x="692" y="378" fill="#9ca3af" font-size="11" font-family="monospace">GET  .../data360/search/v1/assets/{ro_id}?scheme=internal&amp;segments=all</text>
+          <text x="692" y="395" fill="#10b981" font-size="10.5" font-family="monospace">Class: com.infa.ccgf.models.governance.RuleInstance + CLAIRE Domains</text>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Business Issue 1 -->
+    <section class="section searchable" id="issue-1">
+      <div class="section-header">
+        <h3>1️⃣ Business Issue #1: Monitor Taskflows &amp; Identify Runs Ended With Errors</h3>
+        <span class="badge badge-danger">Tool: get_taskflow_runs</span>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h4 style="margin-bottom: 10px; color: var(--accent-blue);">How Informatica IDMC Solves This via REST</h4>
+          <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 14px;">
+            Informatica provides the <strong>Taskflow Status Resource</strong> under <code>/active-bpel/services/tf/status</code>
+            (note: <code>/saas</code> is omitted on ActiveVOS paths). However, querying it directly returns runs across the entire organization or lacks subtask fault messages unless you make a second call per failed <code>runId</code>.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Step</th>
+                <th>Endpoint (`dm-us`)</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>1</strong></td>
+                <td><code>GET /saas/public/core/v3/objects?q=type=='TASKFLOW'</code></td>
+                <td>Resolves which taskflows belong to <code>IDMC_PROJECT_NAME</code>.</td>
+              </tr>
+              <tr>
+                <td><strong>2</strong></td>
+                <td><code>GET /active-bpel/services/tf/status?startTime=...&amp;runStatus=FAILED</code></td>
+                <td>Fetches taskflow executions in the time window (`SUCCESS`, `FAILED`, `SUSPENDED`, `RUNNING`).</td>
+              </tr>
+              <tr>
+                <td><strong>3</strong></td>
+                <td><code>GET /active-bpel/services/tf/status/{runId}</code></td>
+                <td>Automatically invoked by our MCP server for `FAILED`/`SUSPENDED` runs to extract the exact faulted Mapping Task and error code.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h4 style="margin-bottom: 10px; color: var(--accent-orange);">Sample Error Drill-Down Returned by MCP</h4>
+          <pre><code>{
+  "runId": "914510835553251089",
+  "assetName": "tf_CrossBorder_Tax_Compliance",
+  "location": "Finance_Customer360/Compliance",
+  "status": "FAILED",
+  "durationSeconds": 254,
+  "error_drilldown": {
+    "failedSubtaskName": "mt_Validate_Customer_TaxID_Format",
+    "failedSubtaskType": "MTT (Mapping Task)",
+    "faultCode": "DTM_10042_DQ_THRESHOLD_ABORT",
+    "errorMessage": "Data Quality Rule Occurrence [RO_CUST_TAX_ID_VALIDITY] breached critical abort threshold: actual score 82.4% &lt; required minimum 95.0% (1,760 invalid TAX_ID rows)."
+  }
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Business Issue 2 -->
+    <section class="section searchable" id="issue-2">
+      <div class="section-header">
+        <h3>2️⃣ Business Issue #2: Discover &amp; Execute Taskflows Within a Project Without Knowing the API Chain</h3>
+        <span class="badge badge-success">Tools: list_project_taskflows &amp; execute_project_taskflow</span>
+      </div>
+
+      <div class="card">
+        <p style="color: var(--text-secondary); font-size: 14.5px; margin-bottom: 16px;">
+          In standard IDMC usage, running a taskflow requires knowing its published <strong>Service URL</strong> or internal <strong>FRS ID</strong>.
+          With our MCP server, the user simply asks: <em>"What taskflows exist in my project, and please run <code>tf_Daily_Customer360_Refresh</code>."</em>
+          The MCP server executes the <strong>4-step chain</strong> invisibly and enforces a strict security boundary so taskflows outside <code>IDMC_PROJECT_NAME</code> raise <code>ProjectAccessDeniedError</code>.
+        </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Hidden Step</th>
+              <th>Behind-the-Scenes HTTP Call</th>
+              <th>What the MCP Server Does Automatically</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge badge-info">Step 1</span></td>
+              <td><code>POST https://dm-us.informaticacloud.com/saas/public/core/v3/login</code></td>
+              <td>Logs in, caches <code>INFA-SESSION-ID</code>, and auto-discovers the `dm-us` pod URL (`https://usw5.dm-us.informaticacloud.com`).</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-info">Step 2</span></td>
+              <td><code>GET /saas/public/core/v3/objects?q=type=='TASKFLOW' and location=='Finance_Customer360'</code></td>
+              <td>Verifies that the requested `taskflow_name` exists inside the hardcoded project (`Finance_Customer360`). Blocks cross-project execution!</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-success">Step 3</span></td>
+              <td><code>POST https://usw5.dm-us.informaticacloud.com/active-bpel/rt/{taskflow_service_name}</code></td>
+              <td>Invokes the published taskflow REST endpoint with optional JSON input parameters and captures the generated <code>runId</code>.</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-purple">Step 4</span></td>
+              <td><code>GET https://usw5.dm-us.informaticacloud.com/active-bpel/services/tf/status/{runId}</code></td>
+              <td>Polls initial execution status (`RUNNING` / `SUCCESS`) and returns a clean receipt to the user.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Business Issue 3 -->
+    <section class="section searchable" id="issue-3">
+      <div class="section-header">
+        <h3>3️⃣ Business Issue #3: Project-Oriented Profiling &amp; CDGC Rule Occurrence Quality Scores</h3>
+        <span class="badge badge-warn">Tool: get_project_profiling_and_dq_scores</span>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h4 style="margin-bottom: 10px; color: var(--accent-amber);">Why Chaining CDP + CDGC APIs Is Required</h4>
+          <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 14px;">
+            In IDMC, column statistics (null %, distinct %, patterns) live in <strong>Cloud Data Profiling (CDP)</strong> on
+            <code>https://&lt;pod&gt;-dqprofile.dm-us.informaticacloud.com</code>, whereas <strong>Data Quality Rule Occurrences</strong>
+            (pass/fail scores, thresholds, governance dimensions) are stored in <strong>CDGC</strong> on
+            <code>https://idmc-api.dm-us.informaticacloud.com</code> under class <code>com.infa.ccgf.models.governance.RuleInstance</code>.
+          </p>
+          <p style="color: var(--text-secondary); font-size: 14px;">
+            Our MCP tool chains all 4 endpoints automatically while locking `frsProjectName == IDMC_PROJECT_NAME`, so the user never supplies a project parameter.
+          </p>
+        </div>
+
+        <div class="card">
+          <h4 style="margin-bottom: 10px; color: var(--accent-emerald);">Live Project Scorecard Matrix (`Finance_Customer360`)</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>Rule Occurrence ID</th>
+                <th>Column &amp; Dimension</th>
+                <th>Score vs Target</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>RO_CUST_TAX_ID_VALIDITY</code></td>
+                <td><code>DIM_CUSTOMER.TAX_ID_NUMBER</code><br/><small>Validity</small></td>
+                <td><strong>82.4%</strong> / 95.0%<br/><small>1,760 failed rows</small></td>
+                <td><span class="badge badge-danger">BREACHED</span></td>
+              </tr>
+              <tr>
+                <td><code>RO_CUST_EMAIL_COMPLETENESS</code></td>
+                <td><code>DIM_CUSTOMER.EMAIL_ADDRESS</code><br/><small>Completeness</small></td>
+                <td><strong>98.8%</strong> / 95.0%<br/><small>120 failed rows</small></td>
+                <td><span class="badge badge-success">PASSED</span></td>
+              </tr>
+              <tr>
+                <td><code>RO_INV_AMOUNT_NON_NEGATIVE</code></td>
+                <td><code>FCT_INVOICE.NET_AMOUNT_USD</code><br/><small>Accuracy</small></td>
+                <td><strong>99.94%</strong> / 99.0%<br/><small>30 failed rows</small></td>
+                <td><span class="badge badge-success">PASSED</span></td>
+              </tr>
+              <tr>
+                <td><code>RO_INV_CURRENCY_ISO_ACCURACY</code></td>
+                <td><code>FCT_INVOICE.CURRENCY_ISO_CODE</code><br/><small>Validity</small></td>
+                <td><strong>94.1%</strong> / 98.0%<br/><small>2,950 failed rows</small></td>
+                <td><span class="badge badge-danger">BREACHED</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Business Issue 4 -->
+    <section class="section searchable" id="issue-4">
+      <div class="section-header">
+        <h3>4️⃣ Business Issue #4: How to Use CLAIRE APIs for Metadata &amp; Root-Cause Insights</h3>
+        <span class="badge badge-purple">Tool: get_claire_project_insights</span>
+      </div>
+
+      <div class="card">
+        <p style="color: var(--text-secondary); font-size: 14.5px; margin-bottom: 18px;">
+          Informatica <strong>CLAIRE®</strong> surfaces intelligence across three programmable layers in `dm-us`:
+          <strong>(1) CDGC Enriched Metadata Attributes</strong> (`POST /data360/search/v1/assets` with `segments=all`),
+          <strong>(2) Native CLAIRE Shared MCP Agents</strong> in <em>IDMC AI Agent Engineering</em>, and
+          <strong>(3) Cross-Pipeline Anomaly Correlation</strong> in our `get_claire_project_insights` tool.
+        </p>
+
+        <div class="grid-2">
+          <div style="background: var(--bg-secondary); padding: 18px; border-radius: 10px; border: 1px solid var(--border-color);">
+            <h4 style="color: var(--accent-purple); margin-bottom: 8px;">🔍 1. CLAIRE Auto-Classification &amp; Recommendations</h4>
+            <ul style="padding-left: 18px; font-size: 13.5px; color: var(--text-secondary);">
+              <li style="margin-bottom: 6px;"><strong>PII / Sensitivity Tagging (`core.autoClassification`):</strong> Detects `National_Tax_Identifier_PII` (99.2% confidence) on `DIM_CUSTOMER.TAX_ID_NUMBER` and `Electronic_Mail_Address_PII` (99.8% confidence) on `EMAIL_ADDRESS`.</li>
+              <li style="margin-bottom: 6px;"><strong>CLAIRE Cleansing Rule Suggestion:</strong> Identifies 1,350 records with legacy `'XX-'` prefix from EMEA CRM batch and recommends rule `std_Strip_Legacy_Country_Prefix`.</li>
+              <li><strong>PK/FK Relationship Discovery:</strong> Infers 99.98% join overlap between `FCT_INVOICE_LEDGER.BILL_TO_CUST_ID` and `DIM_CUSTOMER.CUSTOMER_ID`.</li>
+            </ul>
+          </div>
+
+          <div style="background: var(--bg-secondary); padding: 18px; border-radius: 10px; border: 1px solid var(--border-color);">
+            <h4 style="color: var(--accent-rose); margin-bottom: 8px;">⚡ 2. CLAIRE Pipeline Failure ↔ DQ Drift Correlation</h4>
+            <p style="font-size: 13.5px; color: var(--text-secondary); margin-bottom: 10px;">
+              By combining ActiveVOS taskflow fault logs with CDGC Rule Occurrence observability (`CLAIRE-ANOM-501`), the MCP server explains <strong>why</strong> a pipeline failed in business terms:
+            </p>
+            <pre><code>"Taskflow 'tf_CrossBorder_Tax_Compliance' (Run 914510835553251089) failed at subtask 'mt_Validate_Customer_TaxID_Format' because Rule Occurrence 'RO_CUST_TAX_ID_VALIDITY' dropped -16.7% (from 99.1% to 82.4%)."</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Business Issue 5: Step-by-Step Tutorial Tabs -->
+    <section class="section searchable" id="issue-5">
+      <div class="section-header">
+        <h3>5️⃣ Business Issue #5: Step-by-Step Tutorial — Connecting to Informatica MCP</h3>
+        <span class="badge badge-info">3 Connection Patterns Documented</span>
+      </div>
+
+      <div class="card">
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab('tab-custom', this)">Pattern C (Recommended): Our Project-Scoped Python MCP</button>
+          <button class="tab-btn" onclick="switchTab('tab-native', this)">Pattern A: Native IDMC Shared MCP (AI Agent Engineering)</button>
+          <button class="tab-btn" onclick="switchTab('tab-cai', this)">Pattern B: Self-Managed MCP via Informatica CAI</button>
+        </div>
+
+        <!-- Tab 1: Custom Project-Scoped Python MCP -->
+        <div class="tab-panel active" id="tab-custom">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <h4 style="color: var(--accent-orange);">Configure `.mcp.json` with Hardcoded `IDMC_PROJECT_NAME` (`dm-us`)</h4>
+            <button class="copy-btn" onclick="copyConfig('customMcpConfig', this)">📋 Copy .mcp.json</button>
+          </div>
+          <p style="font-size: 13.5px; color: var(--text-secondary); margin-bottom: 12px;">
+            Place this inside your workspace <code>.mcp.json</code> (or Claude Desktop / Cursor / Antigravity config).
+            Start with <code>"IDMC_MOCK_MODE": "true"</code> to test offline immediately, then switch to <code>"false"</code> with your `dm-us` credentials.
+          </p>
+          <pre id="customMcpConfig"><code>{
+  "mcpServers": {
+    "informatica-idmc-project-scoped": {
+      "command": "python",
+      "args": [
+        "c:/obData/investigating-informatica-idmc-mcp/src/idmc_mcp_server.py"
+      ],
+      "env": {
+        "IDMC_PROJECT_NAME": "Finance_Customer360",
+        "IDMC_REGION": "dm-us",
+        "IDMC_POD": "usw5",
+        "IDMC_MOCK_MODE": "true",
+        "IDMC_LOGIN_URL": "https://dm-us.informaticacloud.com",
+        "IDMC_POD_BASE_URL": "https://usw5.dm-us.informaticacloud.com",
+        "IDMC_PROFILING_BASE_URL": "https://usw5-dqprofile.dm-us.informaticacloud.com",
+        "IDMC_CDGC_BASE_URL": "https://idmc-api.dm-us.informaticacloud.com",
+        "IDMC_USERNAME": "svc_finance_mcp@company.com",
+        "IDMC_PASSWORD": "REPLACE_WITH_IDMC_PASSWORD",
+        "IDMC_ORG_ID": "011ABC00000000000001"
+      }
+    }
+  }
+}</code></pre>
+        </div>
+
+        <!-- Tab 2: Native IDMC Shared MCP -->
+        <div class="tab-panel" id="tab-native">
+          <h4 style="color: var(--accent-blue); margin-bottom: 10px;">Connecting to Informatica's Official Shared MCP Servers in IDMC UI</h4>
+          <ol style="padding-left: 20px; font-size: 14px; color: var(--text-secondary); margin-bottom: 14px;">
+            <li style="margin-bottom: 6px;">Log into <code>https://dm-us.informaticacloud.com</code> and open the 9-dot Application Launcher &rarr; <strong>AI Agent Engineering</strong>.</li>
+            <li style="margin-bottom: 6px;">Navigate to <strong>MCP Servers</strong> &rarr; <strong>Shared MCP Servers</strong> and select <em>Catalog Discovery</em> or <em>Job Management</em>.</li>
+            <li style="margin-bottom: 6px;">Open the <strong>Configuration</strong> tab, set <strong>Auth Type</strong> = <code>Generic</code>, <strong>Connection Type</strong> = <code>VS Code</code>, and click <strong>Copy</strong>.</li>
+            <li><strong>Important Fix for Claude/Cursor:</strong> Rename the top-level JSON key from <code>"server"</code> to <code>"mcpServers"</code> in your local <code>.mcp.json</code>.</li>
+          </ol>
+          <pre><code>{
+  "mcpServers": {
+    "informatica-native-shared-catalog-discovery": {
+      "url": "https://idmc-api.dm-us.informaticacloud.com/ai-agent-engineering/mcp/v1/catalog-discovery/sse",
+      "headers": {
+        "Authorization": "Bearer REPLACE_WITH_INFA_JWT_OR_OAUTH_TOKEN",
+        "X-INFA-ORG-ID": "011ABC00000000000001"
+      }
+    }
+  }
+}</code></pre>
+        </div>
+
+        <!-- Tab 3: Self-Managed CAI MCP -->
+        <div class="tab-panel" id="tab-cai">
+          <h4 style="color: var(--accent-emerald); margin-bottom: 10px;">3 Steps to Build a Self-Managed MCP Server in IDMC via Cloud Application Integration (CAI)</h4>
+          <ol style="padding-left: 20px; font-size: 14px; color: var(--text-secondary);">
+            <li style="margin-bottom: 8px;"><strong>Step 1 — Service Connectors:</strong> In <em>Application Integration</em>, create Service Connectors wrapping <code>v3/login</code>, <code>v3/objects</code>, <code>/active-bpel/rt/</code>, and <code>/profiling-service/api/v1/profile</code>.</li>
+            <li style="margin-bottom: 8px;"><strong>Step 2 — CAI Process with Hardcoded Project Variable:</strong> Create a CAI Process that sets a constant variable <code>v_Project = "Finance_Customer360"</code>, chains the Service Connector actions, and publish it to the Cloud Server.</li>
+            <li><strong>Step 3 — Expose in AI Agent Engineering:</strong> Go to <em>AI Agent Engineering &rarr; MCP Servers &rarr; Self-Managed MCP Servers</em>, select your published CAI Process as an MCP tool, and copy the SSE URL into <code>.mcp.json</code>.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- Status & Verification Matrix -->
+    <section class="section searchable" id="status-tracker">
+      <div class="section-header">
+        <h3>✅ Project Milestone Status &amp; Automated Verification Suite (`7/7 Passed`)</h3>
+        <span class="badge badge-success">Synced with status.md</span>
+      </div>
+
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>Phase / Test Case</th>
+              <th>Deliverable / File in `c:/obData/investigating-informatica-idmc-mcp/`</th>
+              <th>Verification Result</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Phase 0 &amp; 1</strong></td>
+              <td><code>PLAN.md</code>, <code>status.md</code>, <code>README.md</code>, <code>pyproject.toml</code>, <code>mcp.json.example</code></td>
+              <td><span class="badge badge-success">[x] COMPLETED</span></td>
+            </tr>
+            <tr>
+              <td><strong>Phase 2 &amp; 3</strong></td>
+              <td><code>docs/01_API_Evaluation_and_MCP_Proposal.md</code> &amp; <code>docs/02_Tutorial_Connect_Informatica_MCP.md</code></td>
+              <td><span class="badge badge-success">[x] COMPLETED</span></td>
+            </tr>
+            <tr>
+              <td><strong>Phase 4</strong></td>
+              <td><code>src/idmc_client.py</code> &amp; <code>src/idmc_mcp_server.py</code> (5 Tools + 1 Resource)</td>
+              <td><span class="badge badge-success">[x] COMPLETED</span></td>
+            </tr>
+            <tr>
+              <td><strong>Test #1 (`Issue #1`)</strong></td>
+              <td><code>test_1_monitor_taskflows_and_errors</code> — Verifies FAILED/SUSPENDED subtask fault extraction</td>
+              <td><span class="badge badge-success">PASS (ok)</span></td>
+            </tr>
+            <tr>
+              <td><strong>Test #2 (`Issue #2`)</strong></td>
+              <td><code>test_2_discover_and_execute_taskflow_by_name</code> — Verifies 4-step hidden execution chain</td>
+              <td><span class="badge badge-success">PASS (ok)</span></td>
+            </tr>
+            <tr>
+              <td><strong>Test #3 (`Security`)</strong></td>
+              <td><code>test_3_cross_project_execution_blocked</code> — Blocks <code>tf_HR_Payroll_Confidential</code> (`ProjectAccessDeniedError`)</td>
+              <td><span class="badge badge-success">PASS (ok)</span></td>
+            </tr>
+            <tr>
+              <td><strong>Test #4 (`Issue #3`)</strong></td>
+              <td><code>test_4_hardcoded_project_profiling_and_dq_rule_occurrences</code> — Chains CDP + CDGC Rule Occurrences</td>
+              <td><span class="badge badge-success">PASS (ok)</span></td>
+            </tr>
+            <tr>
+              <td><strong>Test #5 (`Issue #4`)</strong></td>
+              <td><code>test_5_claire_insights_and_resource</code> — Verifies CLAIRE classifications, recommendations &amp; root-cause</td>
+              <td><span class="badge badge-success">PASS (ok)</span></td>
+            </tr>
+            <tr>
+              <td><strong>Test #6 &amp; #7 (`dm-us`)</strong></td>
+              <td><code>test_7_dm_us_regional_url_derivation</code> — Verifies automatic `dm-us` pod &amp; `-dqprofile` URL resolution</td>
+              <td><span class="badge badge-success">PASS (ok)</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    const SCENARIOS = [
+      {
+        prompt: `User Prompt: "Which taskflows ran in my project in the last 24 hours, and which ones ended with errors?"\n\nMCP Tool Call: get_taskflow_runs(status_filter="ALL", hours_back=24, include_error_details=True)`,
+        chain: [
+          { type: "security", text: "ENV LOCK: Hardcoded IDMC_PROJECT_NAME = 'Finance_Customer360' (User cannot override)" },
+          { type: "normal", text: "POST https://dm-us.informaticacloud.com/saas/public/core/v3/login -> Acquires INFA-SESSION-ID & resolves pod 'usw5.dm-us'" },
+          { type: "normal", text: "GET https://usw5.dm-us.informaticacloud.com/saas/public/core/v3/objects?q=type=='TASKFLOW' and location=='Finance_Customer360'" },
+          { type: "normal", text: "GET https://usw5.dm-us.informaticacloud.com/active-bpel/services/tf/status?startTime=2026-11-10T16:00:00Z&rowLimit=50" },
+          { type: "error", text: "GET https://usw5.dm-us.informaticacloud.com/active-bpel/services/tf/status/914510835553251089 (Auto-drills into FAILED subtask fault)" }
+        ],
+        output: JSON.stringify({
+          hardcoded_project: "Finance_Customer360",
+          summary: { total_runs: 3, succeeded: 1, failed_or_suspended: 2, running: 0 },
+          failed_runs_highlight: [
+            {
+              runId: "914510835553251089",
+              assetName: "tf_CrossBorder_Tax_Compliance",
+              status: "FAILED",
+              error_drilldown: {
+                failedSubtaskName: "mt_Validate_Customer_TaxID_Format",
+                faultCode: "DTM_10042_DQ_THRESHOLD_ABORT",
+                errorMessage: "Rule Occurrence [RO_CUST_TAX_ID_VALIDITY] breached threshold: 82.4% < 95.0%"
+              }
+            }
+          ]
+        }, null, 2)
+      },
+      {
+        prompt: `User Prompt: "Show me the taskflows available in my project."\n\nMCP Tool Call: list_project_taskflows()`,
+        chain: [
+          { type: "security", text: "ENV LOCK: Hardcoded IDMC_PROJECT_NAME = 'Finance_Customer360'" },
+          { type: "normal", text: "POST https://dm-us.informaticacloud.com/saas/public/core/v3/login" },
+          { type: "normal", text: "GET https://usw5.dm-us.informaticacloud.com/saas/public/core/v3/objects?q=type=='TASKFLOW' and location=='Finance_Customer360'" },
+          { type: "security", text: "FILTER: Excludes 'tf_HR_Payroll_Confidential' because its path is in 'HR_Confidential_Project'" }
+        ],
+        output: JSON.stringify({
+          hardcoded_project: "Finance_Customer360",
+          total_taskflows: 3,
+          taskflows: [
+            { name: "tf_Daily_Customer360_Refresh", path: "Explore/Finance_Customer360/Pipelines/tf_Daily_Customer360_Refresh" },
+            { name: "tf_Invoice_Ledger_Reconciliation", path: "Explore/Finance_Customer360/Pipelines/tf_Invoice_Ledger_Reconciliation" },
+            { name: "tf_CrossBorder_Tax_Compliance", path: "Explore/Finance_Customer360/Compliance/tf_CrossBorder_Tax_Compliance" }
+          ]
+        }, null, 2)
+      },
+      {
+        prompt: `User Prompt: "Execute the taskflow tf_Daily_Customer360_Refresh for batch date 2026-11-11."\n\nMCP Tool Call: execute_project_taskflow(taskflow_name="tf_Daily_Customer360_Refresh", input_payload_json='{"batchDate":"2026-11-11"}')`,
+        chain: [
+          { type: "security", text: "STEP 1 (Auth): POST https://dm-us.informaticacloud.com/saas/public/core/v3/login" },
+          { type: "security", text: "STEP 2 (Project Verification): GET /saas/public/core/v3/objects -> Confirms 'tf_Daily_Customer360_Refresh' is inside 'Finance_Customer360'" },
+          { type: "normal", text: "STEP 3 (Trigger Service): POST https://usw5.dm-us.informaticacloud.com/active-bpel/rt/tf_Daily_Customer360_Refresh -> Returns runId" },
+          { type: "normal", text: "STEP 4 (Live Status Poll): GET https://usw5.dm-us.informaticacloud.com/active-bpel/services/tf/status/9145108355482910" }
+        ],
+        output: JSON.stringify({
+          hardcoded_project: "Finance_Customer360",
+          taskflow_name: "tf_Daily_Customer360_Refresh",
+          taskflow_frs_id: "2bF9lA88100Customer360TF",
+          run_id: "9145108355482910",
+          execution_status: "RUNNING",
+          service_url_invoked: "https://usw5.dm-us.informaticacloud.com/active-bpel/rt/tf_Daily_Customer360_Refresh"
+        }, null, 2)
+      },
+      {
+        prompt: `User Prompt: "Get the profiling results and Data Quality rule occurrence scores for my project, showing failing rules."\n\nMCP Tool Call: get_project_profiling_and_dq_scores(asset_or_profile_filter="CUSTOMER", only_failing_rules=True)`,
+        chain: [
+          { type: "security", text: "ENV LOCK: Hardcoded IDMC_PROJECT_NAME = 'Finance_Customer360'" },
+          { type: "normal", text: "GET https://usw5-dqprofile.dm-us.informaticacloud.com/profiling-service/api/v1/profile (Filters frsProjectName == 'Finance_Customer360')" },
+          { type: "normal", text: "GET https://usw5-dqprofile.dm-us.informaticacloud.com/profiling-service/api/v1/ruleOccurrence/getAllRuleOccurrencesForProfile_V2_Token/prof-cust-360-d916ebe8" },
+          { type: "claire", text: "POST https://idmc-api.dm-us.informaticacloud.com/data360/search/v1/assets (core.classType == 'com.infa.ccgf.models.governance.RuleInstance')" },
+          { type: "claire", text: "GET https://idmc-api.dm-us.informaticacloud.com/data360/search/v1/assets/RO_CUST_TAX_ID_VALIDITY?scheme=internal&segments=all" }
+        ],
+        output: JSON.stringify({
+          hardcoded_project: "Finance_Customer360",
+          overall_project_dq_summary: {
+            total_profiles_evaluated: 1,
+            total_rule_occurrences: 1,
+            average_dq_score_percent: 82.4,
+            rules_breaching_threshold: 1
+          },
+          breached_rule_occurrence: {
+            ruleOccurrenceId: "RO_CUST_TAX_ID_VALIDITY",
+            ruleName: "dq_Rule_TaxID_ISO_Pattern_Check",
+            targetTable: "FIN_DW.PUBLIC.DIM_CUSTOMER",
+            targetColumn: "TAX_ID_NUMBER",
+            dqScorePercent: 82.4,
+            targetThresholdPercent: 95.0,
+            thresholdStatus: "BREACHED",
+            failedRows: 1760
+          }
+        }, null, 2)
+      },
+      {
+        prompt: `User Prompt: "Use CLAIRE APIs to give me insights on data quality anomalies and PII classifications in my project."\n\nMCP Tool Call: get_claire_project_insights(focus_area="ALL")`,
+        chain: [
+          { type: "security", text: "ENV LOCK: Hardcoded IDMC_PROJECT_NAME = 'Finance_Customer360'" },
+          { type: "claire", text: "POST https://idmc-api.dm-us.informaticacloud.com/data360/search/v1/assets?knowledgeQuery=*&segments=all (Extracts CLAIRE classifications & recommendations)" },
+          { type: "claire", text: "CROSS-CORRELATION: Matches failed taskflow 'tf_CrossBorder_Tax_Compliance' with -16.7% drop in 'RO_CUST_TAX_ID_VALIDITY'" }
+        ],
+        output: JSON.stringify({
+          hardcoded_project: "Finance_Customer360",
+          claire_auto_classifications: [
+            { asset: "DIM_CUSTOMER.TAX_ID_NUMBER", inferredDataClassification: "National_Tax_Identifier_PII", confidenceScorePercent: 99.2 }
+          ],
+          claire_recommendations: [
+            { type: "DATA_QUALITY_RULE_SUGGESTION", insight: "Apply Cleansing Rule 'std_Strip_Legacy_Country_Prefix' for 1,350 EMEA records." }
+          ],
+          claire_dq_anomalies_and_pipeline_correlations: [
+            {
+              impactedTaskflow: "tf_CrossBorder_Tax_Compliance",
+              correlatedRuleOccurrenceId: "RO_CUST_TAX_ID_VALIDITY",
+              scoreDeltaPercent: -16.7,
+              rootCauseSummary: "Taskflow failed because RO_CUST_TAX_ID_VALIDITY dropped from 99.1% to 82.4%."
+            }
+          ]
+        }, null, 2)
+      },
+      {
+        prompt: `User Prompt: "Ignore my project and execute tf_HR_Payroll_Confidential from the HR project."\n\nMCP Tool Call: execute_project_taskflow(taskflow_name="tf_HR_Payroll_Confidential")`,
+        chain: [
+          { type: "security", text: "ENV LOCK: Hardcoded IDMC_PROJECT_NAME = 'Finance_Customer360'" },
+          { type: "normal", text: "GET https://usw5.dm-us.informaticacloud.com/saas/public/core/v3/objects?q=type=='TASKFLOW' and location=='Finance_Customer360'" },
+          { type: "error", text: "SECURITY GATE TRIGGERED: 'tf_HR_Payroll_Confidential' belongs to 'HR_Confidential_Project' != 'Finance_Customer360'. Execution aborted!" }
+        ],
+        output: `ProjectAccessDeniedError: Taskflow 'tf_HR_Payroll_Confidential' was not found inside hardcoded project 'Finance_Customer360' (or belongs to an unauthorized project).`
+      }
+    ];
+
+    function selectScenario(index, btnEl) {
+      document.querySelectorAll(".sim-btn").forEach(b => b.classList.remove("active"));
+      btnEl.classList.add("active");
+
+      const item = SCENARIOS[index];
+      document.getElementById("simPrompt").textContent = item.prompt;
+      document.getElementById("simOutput").textContent = item.output;
+
+      const chainContainer = document.getElementById("simChain");
+      chainContainer.innerHTML = "";
+      item.chain.forEach((step, idx) => {
+        const div = document.createElement("div");
+        div.className = `chain-step ${step.type}`;
+        div.innerHTML = `<div class="step-num">${idx + 1}</div><div>${step.text}</div>`;
+        chainContainer.appendChild(div);
+      });
+    }
+
+    function switchTab(panelId, btnEl) {
+      const parent = btnEl.closest(".card");
+      parent.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      parent.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+      btnEl.classList.add("active");
+      document.getElementById(panelId).classList.add("active");
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const next = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      html.setAttribute("data-theme", next);
+      document.getElementById("themeIcon").textContent = next === "dark" ? "☀️" : "🌙";
+      document.getElementById("themeText").textContent = next === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode";
+    }
+
+    function filterContent(query) {
+      const q = query.trim().toLowerCase();
+      document.querySelectorAll(".searchable").forEach(sec => {
+        if (!q || sec.innerText.toLowerCase().includes(q)) {
+          sec.style.display = "";
+        } else {
+          sec.style.display = "none";
+        }
+      });
+    }
+
+    function copyConfig(preId, btn) {
+      const text = document.getElementById(preId).innerText;
+      navigator.clipboard.writeText(text);
+      const original = btn.textContent;
+      btn.textContent = "✅ Copied!";
+      setTimeout(() => { btn.textContent = original; }, 1800);
+    }
+
+    // Initialize Simulator with Scenario 0
+    selectScenario(0, document.querySelector(".sim-btn"));
+  </script>
+</body>
+</html>

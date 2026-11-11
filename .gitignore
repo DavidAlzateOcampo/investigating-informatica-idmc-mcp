@@ -1,0 +1,20 @@
+# Python byte-compiled / cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+
+# Never commit live MCP credentials or environment files
+.env
+.env.*
+.mcp.json
+claude_desktop_config.json
+
+# OS metadata
+.DS_Store
+Thumbs.db
